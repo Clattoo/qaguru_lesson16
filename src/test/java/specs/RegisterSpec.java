@@ -25,4 +25,10 @@ public class RegisterSpec {
             .log(STATUS)
             .log(BODY)
             .build();
+
+    public static ResponseSpecification missingPasswordRegisterResponseSpec = new ResponseSpecBuilder()
+            .expectStatusCode(400)
+            .log(STATUS)
+            .log(BODY)
+            .build();
 }

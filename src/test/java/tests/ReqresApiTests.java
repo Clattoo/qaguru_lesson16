@@ -3,22 +3,21 @@ package tests;
 import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
-import io.restassured.response.Response;
+import models.RegisterMissingPasswordModel;
 import models.RegisterBodyModel;
 import models.RegisterResponseModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
-import static io.restassured.RestAssured.get;
+
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static specs.ListOfUserSpec.listOfUsersRequestSpec;
 import static specs.ListOfUserSpec.listOfUsersResponseSpec;
-import static specs.RegisterSpec.registerRequestSpec;
-import static specs.RegisterSpec.registerResponseSpec;
+import static specs.RegisterSpec.*;
 
 public class ReqresApiTests extends TestBase {
 
@@ -79,27 +78,31 @@ public class ReqresApiTests extends TestBase {
         assertEquals("4", registerResponse.getId());
         assertEquals("QpwL5tke4Pnpja7X4", registerResponse.getToken());
     });
-        }
+}
 
     @Test
     void registerAccountWithoutPasswordTest() {
-        String registerData = "{\"email\": \"sydney@fife\"}";
+//        String registerData = "{\"email\": \"sydney@fife\"}";
 
-                given()
-                    .log().uri()
-                    .log().body()
-                    .log().headers()
-                    .body(registerData)
-                    .contentType(JSON)
+        RegisterBodyModel registerData = new RegisterBodyModel();
+        registerData.setEmail("eve.holt@reqres.in");
 
+        RegisterMissingPasswordModel registerResponse = step("Отправить POST-запрос на регистрацию с правильными email" +
+                " и password https://reqres.in/api/register", () ->
 
-                .when()
-                    .post("/register")
+                given(registerRequestSpec)
+                        .body(registerData)
 
-                .then()
-                    .log().status()
-                    .statusCode(400)
-                    .body("error", is("Missing password"));
+                        .when()
+                        .post()
+
+                        .then()
+                        .spec(missingPasswordRegisterResponseSpec)
+                        .extract().as(RegisterMissingPasswordModel.class));
+
+        step("Проверить ответ и регистрацию пользователя", () -> {
+            assertEquals("Missing password", registerResponse.getError());
+        });
     }
 
     @Test
