@@ -3,6 +3,7 @@ package tests;
 import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import models.RegisterMissingEmailAndPasswordModel;
 import models.RegisterMissingPasswordModel;
 import models.RegisterBodyModel;
 import models.RegisterResponseModel;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import static io.qameta.allure.Allure.step;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static specs.ListOfUserSpec.listOfUsersRequestSpec;
@@ -81,8 +81,10 @@ public class ReqresApiTests extends TestBase {
 }
 
     @Test
-    void registerAccountWithoutPasswordTest() {
-//        String registerData = "{\"email\": \"sydney@fife\"}";
+    @Severity(SeverityLevel.CRITICAL)
+    @Owner("Maxim Shlemin")
+    @DisplayName("Регистрация пользователя без пароля")
+    void registerAccountMissingPasswordTest() {
 
         RegisterBodyModel registerData = new RegisterBodyModel();
         registerData.setEmail("eve.holt@reqres.in");
@@ -106,22 +108,31 @@ public class ReqresApiTests extends TestBase {
     }
 
     @Test
-    void registerAccountWithWrongBodyTest() {
-        String registerData = "#}";
+    @Severity(SeverityLevel.CRITICAL)
+    @Owner("Maxim Shlemin")
+    @DisplayName("Регистрация пользователя без email и пароля ")
+    void registerAccountMissingEmailPasswordTest() {
 
-        given()
-                .body(registerData)
-                .contentType(JSON)
-                .log().uri()
-                .log().body()
-                .log().headers()
+        RegisterBodyModel registerData = new RegisterBodyModel();
+        registerData.setEmail("");
+        registerData.setPassword("");
 
-                .when()
-                    .post("/register")
+        RegisterMissingEmailAndPasswordModel registerResponse = step("Отправить POST-запрос на регистрацию c отсутствующими email" +
+                "и password https://reqres.in/api/register", () ->
 
-                .then()
-                    .log().status()
-                    .statusCode(400);
+                given(registerRequestSpec)
+                        .body(registerData)
+
+                        .when()
+                        .post()
+
+                        .then()
+                        .spec(missingEmailAndPasswordRegisterResponseSpec)
+                        .extract().as(RegisterMissingEmailAndPasswordModel.class));
+
+        step("Получение ошибки 400", () -> {
+            assertEquals("Missing email or username", registerResponse.getError());
+        });
     }
 
 }
