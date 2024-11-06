@@ -55,7 +55,7 @@ public class ReqresApiTests extends TestBase {
                         .get()
         );
 
-        step("Проверка правильности ответа на GET-запрос", () ->
+        step("Проверка количества разделов в теле ответа", () ->
                 response.then()
                         .spec(listOfUsersResponseSpec)
                         .body("data", hasSize(6))
