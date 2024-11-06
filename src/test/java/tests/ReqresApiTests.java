@@ -74,7 +74,7 @@ public class ReqresApiTests extends TestBase {
                         .spec(registerResponseSpec)
                     .extract().as(RegisterResponseModel.class));
 
-        step("Проверить ответ и регистрацию пользователя", () -> {
+        step("Проверить успешное завершение регистрации", () -> {
         assertEquals("4", registerResponse.getId());
         assertEquals("QpwL5tke4Pnpja7X4", registerResponse.getToken());
     });
