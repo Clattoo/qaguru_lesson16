@@ -55,6 +55,12 @@ tasks.withType(Test) {
     }
 }
 
+task reqres_api_task(type: Test) {
+    useJUnitPlatform {
+        includeTags("reqres_api")
+    }
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }

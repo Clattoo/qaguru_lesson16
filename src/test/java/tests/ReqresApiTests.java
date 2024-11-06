@@ -8,6 +8,7 @@ import models.RegisterMissingPasswordModel;
 import models.RegisterBodyModel;
 import models.RegisterResponseModel;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
@@ -26,7 +27,7 @@ public class ReqresApiTests extends TestBase {
     @Owner("Maxim Shlemin")
     @DisplayName("Проверка успешного получения списка пользователей при отправке " +
             "GET-запроса https://reqres.in/api/users?page=2")
-
+    @Tag("reqres_api")
     void successfulGetListOfUserTest() {
         given(listOfUsersRequestSpec)
                 .when()
@@ -40,7 +41,7 @@ public class ReqresApiTests extends TestBase {
     @Owner("Maxim Shlemin")
     @DisplayName("Проверка количества разделов в теле ответа при отправке " +
             "GET-запроса https://reqres.in/api/users?page=2")
-
+    @Tag("reqres_api")
     void amountOfKeysBodyDataListOfUserTest() {
         given(listOfUsersRequestSpec)
                 .when()
@@ -55,7 +56,7 @@ public class ReqresApiTests extends TestBase {
     @Severity(SeverityLevel.CRITICAL)
     @Owner("Maxim Shlemin")
     @DisplayName("Регистрация пользователя с полными данными email/password")
-
+    @Tag("reqres_api")
     void registerAccountWithRightCreditsTest() {
         RegisterBodyModel registerData = new RegisterBodyModel();
         registerData.setEmail("eve.holt@reqres.in");
@@ -84,6 +85,7 @@ public class ReqresApiTests extends TestBase {
     @Severity(SeverityLevel.CRITICAL)
     @Owner("Maxim Shlemin")
     @DisplayName("Регистрация пользователя без пароля")
+    @Tag("reqres_api")
     void registerAccountMissingPasswordTest() {
 
         RegisterBodyModel registerData = new RegisterBodyModel();
@@ -110,7 +112,8 @@ public class ReqresApiTests extends TestBase {
     @Test
     @Severity(SeverityLevel.CRITICAL)
     @Owner("Maxim Shlemin")
-    @DisplayName("Регистрация пользователя без email и пароля ")
+    @DisplayName("Регистрация пользователя без email и пароля")
+    @Tag("reqres_api")
     void registerAccountMissingEmailPasswordTest() {
 
         RegisterBodyModel registerData = new RegisterBodyModel();
