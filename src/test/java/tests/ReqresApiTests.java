@@ -3,6 +3,7 @@ package tests;
 import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
+import io.restassured.response.Response;
 import models.RegisterMissingEmailAndPasswordModel;
 import models.RegisterMissingPasswordModel;
 import models.RegisterBodyModel;
@@ -29,11 +30,16 @@ public class ReqresApiTests extends TestBase {
             "GET-запроса https://reqres.in/api/users?page=2")
     @Tag("reqres_api")
     void successfulGetListOfUserTest() {
-        given(listOfUsersRequestSpec)
-                .when()
-                    .get()
-                .then()
-                    .spec(listOfUsersResponseSpec);
+        Response response = step("Отправить GET-запрос на получение списка пользователей", () ->
+                given(listOfUsersRequestSpec)
+                        .when()
+                        .get()
+        );
+
+        step("Проверка правильности ответа на GET-запрос", () ->
+                response.then()
+                        .spec(listOfUsersResponseSpec)
+        );
     }
 
     @Test
@@ -43,12 +49,17 @@ public class ReqresApiTests extends TestBase {
             "GET-запроса https://reqres.in/api/users?page=2")
     @Tag("reqres_api")
     void amountOfKeysBodyDataListOfUserTest() {
-        given(listOfUsersRequestSpec)
-                .when()
-                    .get()
-                .then()
-                    .spec(listOfUsersResponseSpec)
-                    .body("data", hasSize(6));
+        Response response = step("Отправить GET-запрос на получение списка пользователей", () ->
+                given(listOfUsersRequestSpec)
+                        .when()
+                        .get()
+        );
+
+        step("Проверка правильности ответа на GET-запрос", () ->
+                response.then()
+                        .spec(listOfUsersResponseSpec)
+                        .body("data", hasSize(6))
+        );
     }
 
 
