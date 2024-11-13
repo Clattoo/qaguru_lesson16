@@ -123,7 +123,7 @@ public class ReqresApiTests extends TestBase {
         registerData.setPassword("");
 
         RegisterMissingDataModel registerResponse = step("Отправить POST-запрос на регистрацию c отсутствующими email" +
-                "и password https://reqres.in/api/register", () ->
+                " и password https://reqres.in/api/register", () ->
 
                 given(registerRequestSpec)
                         .body(registerData)
