@@ -6,35 +6,28 @@ import io.restassured.specification.ResponseSpecification;
 
 import static helpers.CustomAllureListener.withCustomTemplates;
 import static io.restassured.RestAssured.with;
-import static io.restassured.filter.log.LogDetail.BODY;
-import static io.restassured.filter.log.LogDetail.STATUS;
+import static io.restassured.filter.log.LogDetail.*;
 import static io.restassured.http.ContentType.JSON;
 
 public class RegisterSpec {
+
+    public static RequestSpecification listOfUsersRequestSpec = with()
+            .filter(withCustomTemplates())
+            .log().all()
+            .contentType(JSON);
+
     public static RequestSpecification registerRequestSpec = with()
             .filter(withCustomTemplates())
-            .log().uri()
-            .log().body()
-            .log().headers()
-            .contentType(JSON)
-            .baseUri("https://reqres.in")
-            .basePath("api/register");
+            .log().all()
+            .contentType(JSON);
 
-    public static ResponseSpecification registerResponseSpec = new ResponseSpecBuilder()
+    public static ResponseSpecification responseSpec200 = new ResponseSpecBuilder()
             .expectStatusCode(200)
-            .log(STATUS)
-            .log(BODY)
+            .log(ALL)
             .build();
 
-    public static ResponseSpecification missingPasswordRegisterResponseSpec = new ResponseSpecBuilder()
+    public static ResponseSpecification responseSpec400 = new ResponseSpecBuilder()
             .expectStatusCode(400)
-            .log(STATUS)
-            .log(BODY)
-            .build();
-
-    public static ResponseSpecification missingEmailAndPasswordRegisterResponseSpec = new ResponseSpecBuilder()
-            .expectStatusCode(400)
-            .log(STATUS)
-            .log(BODY)
+            .log(ALL)
             .build();
 }
